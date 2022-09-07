@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Copyright (c) 2011 Douglas Mennella <douglas.mennella@gmail.com>
+;; Copyright (c) 2022 Douglas Mennella <douglas.mennella@gmail.com>
 ;; 
 ;; Permission to use, copy, modify, and/or distribute this software for any
 ;; purpose with or without fee is hereby granted, provided that the above
@@ -86,6 +86,11 @@
         (concat body "")
       ))))
 
+(defcustom ngnk-prompt-regexp "^ "
+  "Prompt for `run-ngnk'."
+  :group 'ngnk
+  :type 'string)
+
 (defvar ngnk-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     ;; example definition
@@ -93,8 +98,6 @@
     map)
   "Basic mode map for `run-ngnk'")
 
-(defvar ngnk-prompt-regexp "^: "
-  "Prompt for `run-ngnk'.")
 
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
