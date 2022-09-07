@@ -55,7 +55,7 @@
           nil
         ngnk-start-file)))
 
-(defcustom ngnk-max-output-length 100
+(defcustom ngnk-max-output-length 0
   "Maximum length of output printed"
   :group 'ngnk
   :type 'number)
