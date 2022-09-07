@@ -11,7 +11,7 @@
 
 *** Note about ~Ngnk Max Output Length~
     The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
-    of the command you entered is done.  To take make this work you need to add 0x07 to the start of
+    of the command you entered is done.  To take make this work you need to add ~0x07~ to the start of
     your prompt as a signal to emacs that it's done with the output.  This is easily added by
     putting the following at the start of your startup file:
 
