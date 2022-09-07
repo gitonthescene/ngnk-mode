@@ -18,7 +18,8 @@
    - ~Ngnk Cli File Path~: Path to the executable.  Defaults to a bare "k" which is searched for in your
      ~exec-path~
    - ~Ngnk Max Output Length~: Length at which to clip output.  Setting to ~0~ does no clipping.
-   - ~Ngnk Start File~: File to load on startup
+   - ~Ngnk Start File~: File to load on startup.  This is file is delivered to the executable as if
+     you typed it in immediately after start up.
 
 *** Note about ~Ngnk Max Output Length~
     The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
