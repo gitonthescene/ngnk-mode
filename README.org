@@ -1,0 +1,21 @@
+* ngnk-mode
+  This is a pretty bare bones swipe at an emacs major mode for editing [[https://codeberg.org/ngn/k][ngnk]]
+
+** Customization
+   - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
+     in the same directory as the exectuable.
+   - ~Ngnk Cli File Path~: Path to the executable defaults to a bare "k" which is searched for in your
+     ~exec-path~
+   - ~Ngnk Max Output Length~: Length at which to clip output.  Setting to ~0~ does no clipping.
+   - ~Ngnk Start File~: File to load on startup
+
+*** Note about ~Ngnk Max Output Length~
+    The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
+    of the command you entered is done.  To take make this work you need to add 0x07 to the start of
+    your prompt as a signal to emacs that it's done with the output.  This is easily added by
+    putting the following at the start of your startup file:
+
+    : repl.prompt:0x07," "
+
+    Also, if you don't make this change you should definitely leave ~Ngnk Max Output Length~ to ~0~
+    as otherwise it will totally confuse the function handling this.
