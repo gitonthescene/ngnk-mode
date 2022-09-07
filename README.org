@@ -1,6 +1,14 @@
 * ngnk-mode
   This is a pretty bare bones swipe at an emacs major mode for editing [[https://codeberg.org/ngn/k][ngnk]]
 
+** Set up
+   Put ~ngnk-mode.el~ somewhere in your ~load-path~ (probably ~$HOME/emacs/lib~) and add the
+   following to your .emacs file:
+
+   : (require 'ngnk-mode)
+
+   That should do it.
+
 ** Running K
    To start a session, simply call ~M-x run-ngnk~ which will create a buffer called ~*Ngnk*~.
 
