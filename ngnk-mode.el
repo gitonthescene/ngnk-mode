@@ -62,29 +62,29 @@
 
 (defun ngnk-preout-filter (s)
   (progn
-    (cond
-     ((not ngnk-buffer-limit)
-      (setq ngnk-buffer-limit ngnk-max-output-length))
-     ((= 0 ngnk-max-output-length)
-      (setq ngnk-buffer-limit (length s))))
-    (let* ((pidx (cl-search "\a" s))
-           (origlen (length s))
-           (outlen (or pidx origlen))
-           (body ""))
-      (if (<= outlen ngnk-buffer-limit)  ;; within limit
-          (progn
-            (setq body (substring s 0 outlen))
-            (setq ngnk-buffer-limit (- ngnk-buffer-limit outlen)))
-        (progn
-          (setq body (concat (substring s 0 ngnk-buffer-limit) (if (eq ngnk-buffer-limit 0)"" "...\n")))
-          (setq ngnk-buffer-limit 0)))
-      
-      (if pidx  ;; Done with output
-          (progn
-            (setq ngnk-buffer-limit ngnk-max-output-length) ;; reset
-            (concat body (substring s (+ 1 pidx) origlen)))
-        (concat body "")
-      ))))
+    (if (not ngnk-buffer-limit)
+        (setq ngnk-buffer-limit ngnk-max-output-length))
+      (let* ((pidx (cl-search "\a" s))
+             (origlen (length s))
+             (outlen (or pidx origlen))
+             (body ""))
+        (if (= 0 ngnk-max-output-length)
+            (if pidx
+              (concat (substring s 0 pidx) (substring s (+ 1 pidx) (length s)))
+              s)
+          (if (<= outlen ngnk-buffer-limit)  ;; within limit
+              (progn
+                (setq body (substring s 0 outlen))
+                (setq ngnk-buffer-limit (- ngnk-buffer-limit outlen)))
+            (progn
+              (setq body (concat (substring s 0 ngnk-buffer-limit) (if (eq ngnk-buffer-limit 0)"" "...\n")))
+              (setq ngnk-buffer-limit 0)))
+          (if pidx  ;; Done with output
+              (progn
+                (setq ngnk-buffer-limit ngnk-max-output-length) ;; reset
+                (concat body (substring s (+ 1 pidx) origlen)))
+            (concat body "")
+            )))))
 
 (defcustom ngnk-prompt-regexp "^ "
   "Prompt for `run-ngnk'."
