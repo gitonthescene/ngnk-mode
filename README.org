@@ -1,6 +1,9 @@
 * ngnk-mode
   This is a pretty bare bones swipe at an emacs major mode for editing [[https://codeberg.org/ngn/k][ngnk]]
 
+** Running K
+   To start a session, simply call ~M-x run-ngnk~ which will create a buffer called ~*Ngnk*~.
+
 ** Customization
    - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
      in the same directory as the exectuable.
