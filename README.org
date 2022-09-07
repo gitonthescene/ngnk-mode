@@ -15,7 +15,7 @@
 ** Customization
    - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
      in the same directory as the exectuable.
-   - ~Ngnk Cli File Path~: Path to the executable defaults to a bare "k" which is searched for in your
+   - ~Ngnk Cli File Path~: Path to the executable.  Defaults to a bare "k" which is searched for in your
      ~exec-path~
    - ~Ngnk Max Output Length~: Length at which to clip output.  Setting to ~0~ does no clipping.
    - ~Ngnk Start File~: File to load on startup
