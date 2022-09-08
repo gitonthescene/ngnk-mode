@@ -62,13 +62,7 @@
   :type 'number)
 
 (defun ngnk-remove-marker (s)
-  (let ((pidx (cl-search "\a" s))
-        (ret ""))
-    (while pidx
-      (setq ret (concat ret (substring s 0 pidx)))
-      (setq s (substring s (+ 1 pidx) (length s)))
-      (setq pidx (cl-search "\a" s)))
-    (concat ret s)))
+  (cl-remove ?\a s))
 
 (defun ngnk-preout-filter (s)
   (progn
@@ -100,6 +94,11 @@
   :group 'ngnk
   :type 'string)
 
+(defcustom ngnk-mark-line-continuations nil
+  "Mark line continuations when sending a buffer"
+  :group 'ngnk
+  :type 'boolean)
+
 (defvar ngnk-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     ;; example definition
@@ -115,9 +114,20 @@
 (defun ngnk-send-string (s)
   (comint-send-string (ngnk-buffer-proc) s))
 (defun ngnk-send-region ()
-  (let ((s (concat (buffer-substring (point) (mark)) "\n")))
+  (let* ((s (concat (buffer-substring (point) (mark)) "\n"))
+       (idx (cl-search "\n" s))
+       (ret ""))
+    (if ngnk-mark-line-continuations
+        (progn
+          (while idx
+            (setq ret (concat ret (substring s 0 idx) "\a\n"))
+            (setq s (substring s (+ 1 idx) (length s)))
+            (setq idx (cl-search "\n" s)))
+          (setq s (concat ret s))))
+    (if (equal (substring s (- (length s) 2) (length s)) "\a\n")
+        (setq s (concat (substring s 0 (- (length s) 2)) "\n")))
+    ;; (message s)
     (comint-send-string (ngnk-buffer-proc) s)))
-
 
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
