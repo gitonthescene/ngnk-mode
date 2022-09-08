@@ -10,7 +10,15 @@
    That should do it.
 
 ** Running K
-   To start a session, simply call ~M-x run-ngnk~ which will create a buffer called ~*Ngnk*~.
+   To start a session, simply call ~M-x run-ngnk~ which will create a buffer called ~*Ngnk*~, which
+   you can use as a repl.
+
+   From any other buffer, you can send the selected region to the ~*Ngnk*~ buffer with
+   ~(ngnk-send-region)~.  You can bind that to a key combo by adding something like the following to
+   your .emacs file:
+
+   : (global-set-key (kbd "C-c C-k") (lambda () (interactive) (ngnk-send-region)))
+
 
 ** Customization
    - ~Ngnk Cli File Path~: Path to the executable.  Defaults to a bare "k" which is searched for in your
