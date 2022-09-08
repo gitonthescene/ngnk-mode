@@ -13,13 +13,14 @@
    To start a session, simply call ~M-x run-ngnk~ which will create a buffer called ~*Ngnk*~.
 
 ** Customization
-   - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
-     in the same directory as the exectuable.
    - ~Ngnk Cli File Path~: Path to the executable.  Defaults to a bare "k" which is searched for in your
      ~exec-path~
+   - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
+     in the same directory as the exectuable.
    - ~Ngnk Max Output Length~: Length at which to clip output.  Setting to ~0~ does no clipping.
    - ~Ngnk Start File~: File to load on startup.  This is file is delivered to the executable as if
      you typed it in immediately after start up.
+   - ~Ngnk Mark Line Continuations~: Send eol escape sequences when sending a region to the buffer
 
 *** Note about ~Ngnk Max Output Length~
     The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
@@ -31,3 +32,16 @@
 
     Also, if you don't make this change you should definitely leave ~Ngnk Max Output Length~ to ~0~
     as otherwise it will totally confuse the function handling this.
+
+*** Note about ~Ngnk Mark Line Continuations~
+    By default the ngn/k repl is line oriented, so if you try to enter a multi-line definition of a
+    function or an array it will complain.  To get around this we can send escape sequences with
+    each newline we don't want to represent the end of a command so that the repl may collect these
+    lines instead of processing them individually.  This configuration optionally turns that on.
+
+    In order to get the repl to recognize such escape sequences you should add the following to your
+    startup file to monkey patch the repl.
+
+    : repl.line0:{c:{0x07~*-2#*x}{(l;r):x;(1:1;r,,(-2_l))}/(x;());"\n"/(*|c),,*c}
+    : repl.line1:repl.line
+    : repl.line:{repl.line1@repl.line0@x}
