@@ -53,3 +53,8 @@
     : repl.line0:{c:{0x07~*-2#*x}{(l;r):x;(1:1;r,,(-2_l))}/(x;());"\n"/(*|c),,*c}
     : repl.line1:repl.line
     : repl.line:{repl.line1@repl.line0@x}
+
+    Note that this is mostly for use with ~ngnk-send-region~ and multi-line selections.  You can use
+    directly in the repl but it trips up the emacs side of the connection since with each line
+    entered it waits for a response from the process even as the process is waiting for more input.
+    You can kill this deadlock with `C-g` but mostly it's not even worth attempting.
