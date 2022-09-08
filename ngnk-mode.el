@@ -60,31 +60,39 @@
   :group 'ngnk
   :type 'number)
 
+(defun ngnk-remove-marker (s)
+  (let ((pidx (cl-search "\a" s))
+        (ret ""))
+    (while pidx
+      (setq ret (concat ret (substring s 0 pidx)))
+      (setq s (substring s (+ 1 pidx) (length s)))
+      (setq pidx (cl-search "\a" s)))
+    (concat ret s)))
+
 (defun ngnk-preout-filter (s)
   (progn
     (if (not ngnk-buffer-limit)
         (setq ngnk-buffer-limit ngnk-max-output-length))
-      (let* ((pidx (cl-search "\a" s))
+      (let* ((pidx (cl-search "\a" s :from-end))
              (origlen (length s))
              (outlen (or pidx origlen))
              (body ""))
         (if (= 0 ngnk-max-output-length)
             (if pidx
-              (concat (substring s 0 pidx) (substring s (+ 1 pidx) (length s)))
+                (ngnk-remove-marker s)
               s)
           (if (<= outlen ngnk-buffer-limit)  ;; within limit
               (progn
-                (setq body (substring s 0 outlen))
+                (setq body (ngnk-remove-marker (substring s 0 outlen)))
                 (setq ngnk-buffer-limit (- ngnk-buffer-limit outlen)))
             (progn
-              (setq body (concat (substring s 0 ngnk-buffer-limit) (if (eq ngnk-buffer-limit 0)"" "...\n")))
+              (setq body (concat (ngnk-remove-marker (substring s 0 ngnk-buffer-limit)) (if (eq ngnk-buffer-limit 0) "" "...\n")))
               (setq ngnk-buffer-limit 0)))
           (if pidx  ;; Done with output
               (progn
                 (setq ngnk-buffer-limit ngnk-max-output-length) ;; reset
-                (concat body (substring s (+ 1 pidx) origlen)))
-            (concat body "")
-            )))))
+                (concat body (ngnk-remove-marker (substring s (+ 1 pidx) origlen))))
+            body)))))
 
 (defcustom ngnk-prompt-regexp "^ "
   "Prompt for `run-ngnk'."
@@ -97,6 +105,17 @@
     (define-key map "\t" 'completion-at-point)
     map)
   "Basic mode map for `run-ngnk'")
+
+(setq ngnk-buffer-name "*Ngnk*")
+(defun ngnk-buffer ()
+    (get-buffer ngnk-buffer-name))
+(defun ngnk-buffer-proc ()
+  (get-buffer-process (ngnk-buffer)))
+(defun ngnk-send-string (s)
+  (comint-send-string (ngnk-buffer-proc) s))
+(defun ngnk-send-region ()
+  (let ((s (concat (buffer-substring (point) (mark)) "\n")))
+    (comint-send-string (ngnk-buffer-proc) s)))
 
 
 (defun run-ngnk ()
