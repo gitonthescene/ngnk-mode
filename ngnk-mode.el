@@ -124,10 +124,14 @@
             (setq s (substring s (+ 1 idx) (length s)))
             (setq idx (cl-search "\n" s)))
           (setq s (concat ret s))))
-    (if (equal (substring s (- (length s) 2) (length s)) "\a\n")
-        (setq s (concat (substring s 0 (- (length s) 2)) "\n")))
+    (let ((end (- (length s) 1))
+          (chr nil))
+      (while (or (eq (setq chr (aref s end)) ?\n)
+                 (eq (setq chr (aref s end)) ?\a))
+        (setq end (- end 1)))
+      (setq s (concat (substring s 0 (+ end 1)) "\n"))
     ;; (message s)
-    (comint-send-string (ngnk-buffer-proc) s)))
+    (comint-send-string (ngnk-buffer-proc) s))))
 
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
