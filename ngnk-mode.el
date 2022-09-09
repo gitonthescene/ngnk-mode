@@ -1,4 +1,5 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ngnk-mode.el --- major-mode and a few utilities for working with ngn/k. -*- lexical-binding: t; -*-
+
 ;; Copyright (c) 2022 Douglas Mennella <douglas.mennella@gmail.com>
 ;; 
 ;; Permission to use, copy, modify, and/or distribute this software for any
@@ -12,13 +13,18 @@
 ;; WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ;; ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 ;; OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; major-mode and a few utilities for working with ngn/k.
+;; Author: Douglas Mennella <douglas.mennella@gmail.com>
+;; Created: September 7th, 2022
+;; Keywords: ngn/k, k, emacs-mode
+;; URL: https://github.com/gitonthescene/ngnk-mode
+;;
+;; Version: 0.1
+;;
+;;; Commentary:
 ;;
 ;; Modeled on [[https://www.masteringemacs.org/article/comint-writing-command-interpreter]]
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'comint)
 
 (defgroup ngnk nil "ngn/k language editing mode."
@@ -123,15 +129,15 @@
             (setq ret (concat ret (substring s 0 idx) "\a\n"))
             (setq s (substring s (+ 1 idx) (length s)))
             (setq idx (cl-search "\n" s)))
-          (setq s (concat ret s))))
-    (let ((end (- (length s) 1))
-          (chr nil))
-      (while (or (eq (setq chr (aref s end)) ?\n)
-                 (eq (setq chr (aref s end)) ?\a))
-        (setq end (- end 1)))
-      (setq s (concat (substring s 0 (+ end 1)) "\n"))
-    ;; (message s)
-    (comint-send-string (ngnk-buffer-proc) s))))
+          (setq s (concat ret s))
+          (let ((end (- (length s) 1))
+                (chr nil))
+            (while (or (eq (setq chr (aref s end)) ?\n)
+                       (eq (setq chr (aref s end)) ?\a))
+              (setq end (- end 1)))
+            (setq s (concat (substring s 0 (+ end 1)) "\n")))))
+    (message s)
+    (comint-send-string (ngnk-buffer-proc) s)))
 
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
@@ -187,3 +193,4 @@
 ;;   "Additional expressions to highlight in `ngnk-mode'.")
 
 (provide 'ngnk-mode)
+;;; ngnk-mode.el ends here
