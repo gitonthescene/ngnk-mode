@@ -139,23 +139,25 @@
     (message s)
     (comint-send-string (ngnk-buffer-proc) s)))
 
+(defun ngnk-attach-proc (buffer)
+  "Attach ngn/k process to buffer"
+  (let* ((ngnk-program ngnk-cli-file-path))
+    (apply 'make-comint-in-buffer "Ngnk" buffer
+           ngnk-program (ngnk-sfile) (ngnk-cli-args))
+    (ngnk-mode)))
+
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
   (interactive)
-  (let* ((ngnk-program ngnk-cli-file-path)
-         (buffer (comint-check-proc "Ngnk")))
+  (progn
     ;; pop to the "*Ngnk*" buffer if the process is dead, the
     ;; buffer is missing or it's got the wrong mode.
-    (pop-to-buffer-same-window
-     (if (or buffer (not (derived-mode-p 'ngnk-mode))
-             (comint-check-proc (current-buffer)))
-         (get-buffer-create (or buffer "*Ngnk*"))
-       (current-buffer)))
+    (if (not (comint-check-proc (current-buffer)))
+        (pop-to-buffer-same-window
+         (get-buffer-create ngnk-buffer-name)))
+
     ;; create the comint process if there is no buffer.
-    (unless buffer
-      (apply 'make-comint-in-buffer "Ngnk" buffer
-             ngnk-program (ngnk-sfile) (ngnk-cli-args))
-      (ngnk-mode))))
+    (ngnk-attach-proc (current-buffer))))
 
 (defun ngnk--initialize ()
   "Helper function to initialize Ngnk"
@@ -191,6 +193,14 @@
 ;;    ;; highlight all the reserved commands.
 ;;    `(,(concat "\\_<" (regexp-opt ngnk-keywords) "\\_>") . font-lock-keyword-face))
 ;;   "Additional expressions to highlight in `ngnk-mode'.")
+
+(ert-deftest ngnk-test-require ()
+  "Test that module loads"
+  (should (equal
+           'ngnk-mode
+           (condition-case nil
+               (require 'ngnk-mode)
+             (error 'fail-to-load)))))
 
 (provide 'ngnk-mode)
 ;;; ngnk-mode.el ends here
