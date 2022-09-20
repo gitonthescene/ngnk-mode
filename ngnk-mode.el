@@ -194,13 +194,5 @@
 ;;    `(,(concat "\\_<" (regexp-opt ngnk-keywords) "\\_>") . font-lock-keyword-face))
 ;;   "Additional expressions to highlight in `ngnk-mode'.")
 
-(ert-deftest ngnk-test-require ()
-  "Test that module loads"
-  (should (equal
-           'ngnk-mode
-           (condition-case nil
-               (require 'ngnk-mode)
-             (error 'fail-to-load)))))
-
 (provide 'ngnk-mode)
 ;;; ngnk-mode.el ends here
