@@ -26,6 +26,7 @@
 ;; Modeled on [[https://www.masteringemacs.org/article/comint-writing-command-interpreter]]
 ;;
 (require 'comint)
+(require 'cl-lib)
 
 (defgroup ngnk nil "ngn/k language editing mode."
   :group 'languages
