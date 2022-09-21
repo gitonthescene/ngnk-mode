@@ -93,9 +93,11 @@
           (setq start (+ nlix 1))
           (setq nlix (cl-search "\n" s :start2 start)))
         (if (or pix (setq pix (cl-search "\a" s :start2 start))) ;; Done with output
-            (progn
+            (let ((st (+ 1 pix)))
+              (if (and (not nlix) (> limit 0))
+                  (setq st start))
               (setq ngnk-buffer-limit nil) ;; reset
-              (setq body (concat body (substring s (+ 1 pix) origlen)))))
+              (setq body (concat body (substring s st origlen)))))
         (ngnk-remove-marker body)))))
 
 (defcustom ngnk-prompt-regexp "^ "
