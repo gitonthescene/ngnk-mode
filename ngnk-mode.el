@@ -72,29 +72,31 @@
   (cl-remove ?\a s))
 
 (defun ngnk-preout-filter (s)
+  "When ngnk-max-output-length is > 0, limit output to ngnk-max-output-length lines"
   (progn
     (if (not ngnk-buffer-limit)
         (setq ngnk-buffer-limit ngnk-max-output-length))
-      (let* ((pidx (cl-search "\a" s :from-end))
-             (origlen (length s))
-             (outlen (or pidx origlen))
-             (body ""))
-        (if (= 0 ngnk-max-output-length)
-            (if pidx
-                (ngnk-remove-marker s)
-              s)
-          (if (<= outlen ngnk-buffer-limit)  ;; within limit
-              (progn
-                (setq body (ngnk-remove-marker (substring s 0 outlen)))
-                (setq ngnk-buffer-limit (- ngnk-buffer-limit outlen)))
+    (if (= 0 ngnk-max-output-length)
+        (progn
+          (setq ngnk-buffer-limit nil)
+          (ngnk-remove-marker s))
+      (let ((nlix (cl-search "\n" s))
+            (origlen (length s))
+            (start 0)
+            (body "")
+            (pix nil))
+        (while (and (> ngnk-buffer-limit 0) nlix (not pix))
+          (setq pix (cl-search "\a" s :start2 start :end2 nlix))
+          (setq ngnk-buffer-limit (- ngnk-buffer-limit 1))
+          (setq body (concat body (substring s start (min (+ 1 nlix) (or pix (+ 1 nlix))))))
+          (if (= ngnk-buffer-limit 0) (setq body (concat body "...")))
+          (setq start (+ nlix 1))
+          (setq nlix (cl-search "\n" s :start2 start)))
+        (if (or pix (setq pix (cl-search "\a" s :start2 start))) ;; Done with output
             (progn
-              (setq body (concat (ngnk-remove-marker (substring s 0 ngnk-buffer-limit)) (if (eq ngnk-buffer-limit 0) "" "...\n")))
-              (setq ngnk-buffer-limit 0)))
-          (if pidx  ;; Done with output
-              (progn
-                (setq ngnk-buffer-limit ngnk-max-output-length) ;; reset
-                (concat body (ngnk-remove-marker (substring s (+ 1 pidx) origlen))))
-            body)))))
+              (setq ngnk-buffer-limit nil) ;; reset
+              (setq body (concat body (substring s (+ 1 pix) origlen)))))
+        (ngnk-remove-marker body)))))
 
 (defcustom ngnk-prompt-regexp "^ "
   "Prompt for `run-ngnk'."
