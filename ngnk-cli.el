@@ -1,4 +1,4 @@
-;;; ngnk-mode.el --- major-mode and a few utilities for working with ngn/k. -*- lexical-binding: t; -*-
+;;; ngnk-cli.el --- major-mode and a few utilities for working with ngn/k. -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2022 Douglas Mennella <douglas.mennella@gmail.com>
 ;; 
@@ -17,7 +17,7 @@
 ;; Author: Douglas Mennella <douglas.mennella@gmail.com>
 ;; Created: September 7th, 2022
 ;; Keywords: ngn/k, k, emacs-mode
-;; URL: https://github.com/gitonthescene/ngnk-mode
+;; URL: https://github.com/gitonthescene/ngnk-cli
 ;;
 ;; Version: 0.1
 ;;
@@ -110,7 +110,7 @@
   :group 'ngnk
   :type 'boolean)
 
-(defvar ngnk-mode-map
+(defvar ngnk-cli-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     ;; example definition
     (define-key map "\t" 'completion-at-point)
@@ -124,7 +124,9 @@
   (get-buffer-process (ngnk-buffer)))
 (defun ngnk-send-string (s)
   (comint-send-string (ngnk-buffer-proc) s))
+
 (defun ngnk-send-region ()
+  "Send region to running ngn/k process"
   (let* ((s (concat (buffer-substring (point) (mark)) "\n"))
        (idx (cl-search "\n" s))
        (ret ""))
@@ -149,7 +151,7 @@
   (let* ((ngnk-program ngnk-cli-file-path))
     (apply 'make-comint-in-buffer "Ngnk" buffer
            ngnk-program (ngnk-sfile) (ngnk-cli-args))
-    (ngnk-mode)))
+    (ngnk-cli)))
 
 (defun run-ngnk ()
   "Run an inferior instance of `ngnk-cli' inside Emacs."
@@ -171,10 +173,10 @@
         (add-hook 'comint-preoutput-filter-functions
                   'ngnk-preout-filter nil t))
 
-(define-derived-mode ngnk-mode comint-mode "Ngnk"
+(define-derived-mode ngnk-cli comint-mode "Ngnk"
   "Major mode for `run-ngnk'.
 
-\\<ngnk-mode-map>"
+\\<ngnk-cli-map>"
   nil "Ngnk"
   ;; this sets up the prompt so it matches things like: [foo@bar]
   (setq comint-prompt-regexp ngnk-prompt-regexp)
@@ -186,7 +188,7 @@
   (set (make-local-variable 'ngnk-buffer-limit) nil)
 ;;  (set (make-local-variable 'font-lock-defaults) '(ngnk-font-lock-keywords t))
   (set (make-local-variable 'paragraph-start) ngnk-prompt-regexp))
-(add-hook 'ngnk-mode-hook 'ngnk--initialize)
+(add-hook 'ngnk-cli-hook 'ngnk--initialize)
 
 ;; (set (make-local-variable 'font-lock-defaults) '(ngnk-font-lock-keywords t))
 ;; 
@@ -197,7 +199,7 @@
 ;;   (list
 ;;    ;; highlight all the reserved commands.
 ;;    `(,(concat "\\_<" (regexp-opt ngnk-keywords) "\\_>") . font-lock-keyword-face))
-;;   "Additional expressions to highlight in `ngnk-mode'.")
+;;   "Additional expressions to highlight in `ngnk-cli'.")
 
-(provide 'ngnk-mode)
-;;; ngnk-mode.el ends here
+(provide 'ngnk-cli)
+;;; ngnk-cli.el ends here

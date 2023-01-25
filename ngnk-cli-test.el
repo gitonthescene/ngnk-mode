@@ -1,4 +1,4 @@
-(require 'ngnk-mode)
+(require 'ngnk-cli)
 
 (ert-deftest ngnk-test-prefilter ()
   "Test prefilter"
