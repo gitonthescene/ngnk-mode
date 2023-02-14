@@ -125,9 +125,10 @@
 (defun ngnk-send-string (s)
   (comint-send-string (ngnk-buffer-proc) s))
 
-(defun ngnk-send-region ()
+(defun ngnk-send-region (point mark)
+  (interactive "^r")
   "Send region to running ngn/k process"
-  (let* ((s (concat (buffer-substring (point) (mark)) "\n"))
+  (let* ((s (concat (buffer-substring point mark) "\n"))
        (idx (cl-search "\n" s))
        (ret ""))
     (if ngnk-mark-line-continuations
@@ -144,7 +145,12 @@
               (setq end (- end 1)))
             (setq s (concat (substring s 0 (+ end 1)) "\n")))))
     (message s)
-    (comint-send-string (ngnk-buffer-proc) s)))
+    (ngnk-send-string s)))
+
+(defun ngnk-send-line-at-point (point)
+  (interactive "p")
+  (ngnk-send-region (point-at-bol) (point-at-eol))
+  )
 
 (defun ngnk-attach-proc (buffer)
   "Attach ngn/k process to buffer"
