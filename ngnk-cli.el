@@ -94,14 +94,14 @@
           (if (= ngnk-buffer-limit 0) (setq body (concat body "...")))
           (setq start (+ nlix 1))
           (setq nlix (cl-search "\n" s :start2 start)))
-        (if (and (> ngnk-buffer-limit 0) (not pix))
-          (setq body (concat body (substring s end origlen))))
         (if (or pix (setq pix (cl-search "\a" s :start2 start))) ;; Done with output
             (let ((st (+ 1 pix)))
               (if (and (not nlix) (> ngnk-buffer-limit 0))
                   (setq st start))
               (setq ngnk-buffer-limit nil) ;; reset
-              (setq body (concat body (substring s st origlen)))))
+              (setq body (concat body (substring s st origlen))))
+          (if (and (> ngnk-buffer-limit 0) (not pix))
+              (setq body (concat body (substring s end origlen)))))
         (ngnk-remove-marker body)))))
 
 (defcustom ngnk-prompt-regexp "^ "
