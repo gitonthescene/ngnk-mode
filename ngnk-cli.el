@@ -85,22 +85,21 @@
             (start 0)
             (end 0)
             (body "")
-            (pix nil))
-        (while (and (> ngnk-buffer-limit 0) nlix (not pix))
-          (setq pix (cl-search "\a" s :start2 start :end2 nlix))
+            (pix (cl-search "\a" s)))
+        (while (and (> ngnk-buffer-limit 0) nlix (or (not pix) (> pix nlix)))
           (setq ngnk-buffer-limit (- ngnk-buffer-limit 1))
           (setq end (min (+ 1 nlix) (or pix (+ 1 nlix))))
           (setq body (concat body (substring s start end)))
           (if (= ngnk-buffer-limit 0) (setq body (concat body "...")))
           (setq start (+ nlix 1))
           (setq nlix (cl-search "\n" s :start2 start)))
-        (if (or pix (setq pix (cl-search "\a" s :start2 start))) ;; Done with output
+        (if pix ;; Done with output
             (let ((st (+ 1 pix)))
               (if (and (not nlix) (> ngnk-buffer-limit 0))
                   (setq st start))
               (setq ngnk-buffer-limit nil) ;; reset
               (setq body (concat body (substring s st origlen))))
-          (if (and (> ngnk-buffer-limit 0) (not pix))
+          (if (and (> ngnk-buffer-limit 0))
               (setq body (concat body (substring s end origlen)))))
         (ngnk-remove-marker body)))))
 
