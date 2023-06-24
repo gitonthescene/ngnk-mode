@@ -182,6 +182,30 @@
         (add-hook 'comint-preoutput-filter-functions
                   'ngnk-preout-filter nil t))
 
+(defvar ngnk-cli-syntax-table
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?\" "." table)
+    (modify-syntax-entry ?\/ "." table)
+    (modify-syntax-entry ?\_ "." table)
+    (modify-syntax-entry ?\\ "." table)
+    (modify-syntax-entry ?\$ "." table)
+    (modify-syntax-entry ?\% "." table)
+    (modify-syntax-entry ?\& "." table)
+    (modify-syntax-entry ?\+ "." table)
+    (modify-syntax-entry ?\, "." table)
+    (modify-syntax-entry ?\- "." table)
+    (modify-syntax-entry ?\* "." table)
+    (modify-syntax-entry ?\= "." table)
+    (modify-syntax-entry ?\< "." table)
+    (modify-syntax-entry ?\> "." table)
+    (modify-syntax-entry ?\| "." table)
+    (modify-syntax-entry ?\. "_" table)
+    (modify-syntax-entry ?\` "_" table)
+    (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?\r ">" table)
+    table)
+  "Syntax table for `ngnk-cli'.")
+
 (define-derived-mode ngnk-cli comint-mode "Ngnk"
   "Major mode for `run-ngnk'.
 
