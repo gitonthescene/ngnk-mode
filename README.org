@@ -2,7 +2,7 @@
   This contains a pretty bare bones swipe at an emacs [[https://github.com/emacs-mirror/emacs/blob/master/lisp/comint.el][command interpreter]] for editing [[https://codeberg.org/ngn/k][ngn/k]]
   as well as an even more bare-bones major mode for editing ngnk.
 
-  Most of this doc describes `ngnk-cli` which is the emacs wrapper for the command interpreter.
+  Most of this doc describes ~ngnk-cli~ which is the emacs wrapper for the command interpreter.
   The main use of the major mode currently is to be used in conjunction with an equally bare bones
   [[https://github.com/gitonthescene/ngnk-lsp][LSP server]].
 
@@ -30,12 +30,13 @@
      ~exec-path~
    - ~Ngnk Cli Arguments~: List of arguments to pass to the k executable.  Defaults to the ~repl.k~ file
      in the same directory as the exectuable.
-   - ~Ngnk Max Output Length~: Length at which to clip output.  Setting to ~0~ does no clipping.
+   - ~Ngnk Max Output Length~: [ DEPRECATED ] Length at which to clip output.  Setting to ~0~ does no clipping.
    - ~Ngnk Start File~: File to load on startup.  This is file is delivered to the executable as if
      you typed it in immediately after start up.
    - ~Ngnk Mark Line Continuations~: Send eol escape sequences when sending a region to the buffer
 
 *** Note about ~Ngnk Max Output Length~
+    [ DEPRECATED: This functionality is now found in ~repl.k~ directly ]
     The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
     of the command you entered is done.  To take make this work you need to add ~0x07~ to the start
     of your prompt as a signal to emacs that it's done with the output.  This is currently the
