@@ -1,11 +1,16 @@
 * ngnk-mode
-  This is a pretty bare bones swipe at an emacs major mode for editing [[https://codeberg.org/ngn/k][ngnk]]
+  This contains a pretty bare bones swipe at an emacs [[https://github.com/emacs-mirror/emacs/blob/master/lisp/comint.el][command interpreter]] for editing [[https://codeberg.org/ngn/k][ngn/k]]
+  as well as an even more bare-bones major mode for editing ngnk.
+
+  Most of this doc describes `ngnk-cli` which is the emacs wrapper for the command interpreter.
+  The main use of the major mode currently is to be used in conjunction with an equally bare bones
+  [[https://github.com/gitonthescene/ngnk-lsp][LSP server]].
 
 ** Set up
-   Put ~ngnk-mode.el~ somewhere in your ~load-path~ (probably ~$HOME/emacs/lib~) and add the
+   Put ~ngnk-cli.el~ somewhere in your ~load-path~ (probably ~$HOME/emacs/lib~) and add the
    following to your .emacs file:
 
-   : (require 'ngnk-mode)
+   : (require 'ngnk-cli)
 
    That should do it.
 
