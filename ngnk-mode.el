@@ -30,7 +30,7 @@
 
 (defvar ngnk-mode-syntax-table
   (let ((table (make-syntax-table)))
-    (modify-syntax-entry ?\" "." table)
+    (modify-syntax-entry ?\" "\"" table)
     (modify-syntax-entry ?\/ "." table)
     (modify-syntax-entry ?\_ "." table)
     (modify-syntax-entry ?\\ "." table)
@@ -57,7 +57,9 @@
   "Major mode for editing ngn/k code.
 
 \\<ngnk-mode-map>"
-  nil "Ngnk")
+  nil "Ngnk"
+  (set (make-local-variable 'indent-tabs-mode) nil)
+  (set (make-local-variable 'tabs-width) 2))
 
 
 (provide 'ngnk-mode)

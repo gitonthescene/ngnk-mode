@@ -37,7 +37,7 @@
 
 ** Sytnax Highlighting
    This is currently available through the [[https://github.com/gitonthescene/ngnk-lsp][ngn/k lsp server]] and is a work in progress.
-   
+
 *** Note about ~Ngnk Max Output Length~
     [ DEPRECATED: This functionality is now found in ~repl.k~ directly ]
     The output from k is delivered in 1K chunks but emacs has no way to know when the "full output"
