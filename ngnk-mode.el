@@ -28,6 +28,13 @@
   :group 'languages
   :prefix "ngnk-")
 
+;;;###autoload
+(define-derived-mode ngnk-mode prog-mode "Ngnk"
+  "Major mode for editing ngn/k code.
+
+\\<ngnk-mode-map>"
+  nil "Ngnk")
+
 (defvar ngnk-mode-syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?\" "\"" table)
@@ -52,15 +59,7 @@
     table)
   "Syntax table for `ngnk-mode'.")
 
-;;;###autoload
-(define-derived-mode ngnk-mode text-mode "Ngnk"
-  "Major mode for editing ngn/k code.
-
-\\<ngnk-mode-map>"
-  nil "Ngnk"
-  (set (make-local-variable 'indent-tabs-mode) nil)
-  (set (make-local-variable 'tabs-width) 2))
-
+(keymap-set ngnk-mode-map "C-c C-c" 'ngnk-send)
 
 (provide 'ngnk-mode)
 ;;; ngnk-mode.el ends here
