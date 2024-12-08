@@ -71,6 +71,8 @@
 (defun ngnk-remove-marker (s)
   (cl-remove ?\a s))
 
+(defvar ngnk-buffer-limit)
+
 (defun ngnk-preout-filter (s)
   "When ngnk-max-output-length is > 0, limit output to ngnk-max-output-length lines"
   (progn
@@ -128,9 +130,12 @@
 (defun ngnk-send-string (s)
   (comint-send-string (ngnk-buffer-proc) s))
 
-(defun ngnk-send-region (point mark)
-  (interactive "^r")
-  "Send region to running ngn/k process"
+(defun ngnk-send (point mark)
+  "Send active region or current line to running ngn/k process"
+  (interactive
+   (if (use-region-p)
+       (list (region-beginning) (use-region-end))
+    (list (pos-bol) (pos-eol))))
   (let* ((s (concat (buffer-substring point mark) "\n"))
        (idx (cl-search "\n" s))
        (ret ""))
@@ -141,19 +146,12 @@
             (setq s (substring s (+ 1 idx) (length s)))
             (setq idx (cl-search "\n" s)))
           (setq s (concat ret s))
-          (let ((end (- (length s) 1))
-                (chr nil))
-            (while (or (eq (setq chr (aref s end)) ?\n)
-                       (eq (setq chr (aref s end)) ?\a))
-              (setq end (- end 1)))
+          (let ((end (1- (length s))))
+            (while (or (eq (aref s end) ?\n) (eq (aref s end) ?\a))
+              (setq end (1- end)))
             (setq s (concat (substring s 0 (+ end 1)) "\n")))))
     (message s)
     (ngnk-send-string s)))
-
-(defun ngnk-send-line-at-point (point)
-  (interactive "p")
-  (ngnk-send-region (point-at-bol) (point-at-eol))
-  )
 
 (defun ngnk-attach-proc (buffer)
   "Attach ngn/k process to buffer"
