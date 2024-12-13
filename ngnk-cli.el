@@ -150,7 +150,7 @@
             (while (or (eq (aref s end) ?\n) (eq (aref s end) ?\a))
               (setq end (1- end)))
             (setq s (concat (substring s 0 (+ end 1)) "\n")))))
-    (message s)
+    (message "%s" (string-trim-right s))
     (ngnk-send-string s)))
 
 (defun ngnk-attach-proc (buffer)
