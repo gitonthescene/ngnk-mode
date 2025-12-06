@@ -60,3 +60,8 @@
     nl escapes directly in the repl but it trips up the emacs side of the connection since with each
     line entered it waits for a response from the process even as the process is waiting for more
     input.  You can kill this deadlock with ~C-g~ but mostly it's not even worth attempting.
+
+** Alternatives
+    In addtion to the forks here on github, there's a version on
+    Codeberg by [[https://codeberg.org/pkal/ngnk-mode][pkal]] with some pretty heavy changes you might want to
+    try out.
