@@ -33,7 +33,8 @@
   "Major mode for editing ngn/k code.
 
 \\<ngnk-mode-map>"
-  nil "Ngnk")
+  nil "Ngnk"
+  (set (make-local-variable 'indent-tabs-mode) nil))
 
 (defvar ngnk-mode-syntax-table
   (let ((table (make-syntax-table)))
